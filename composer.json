@@ -1,0 +1,15 @@
+{
+    "name": "tab/tab",
+    "type": "project",
+    "require-dev": {
+    },
+    "authors": [
+        {
+            "name": "leonid averianov",
+            "email": "ciberstrigo@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.1"
+    }
+}
