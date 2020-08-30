@@ -475,3 +475,4 @@ composer.lock
 
 Variables.php
 .env
+.idea

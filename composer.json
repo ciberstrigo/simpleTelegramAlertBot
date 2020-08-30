@@ -10,6 +10,7 @@
         }
     ],
     "require": {
-        "vlucas/phpdotenv": "^5.1"
+        "vlucas/phpdotenv": "^5.1",
+        "ext-json": "*"
     }
 }
