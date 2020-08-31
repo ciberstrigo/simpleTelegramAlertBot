@@ -4,23 +4,28 @@
 namespace TelegramAlertBot;
 
 
+use Exception;
+
 class Main
 {
     public static function main()
     {
         $telegram = new Telegram();
         $content = json_decode(file_get_contents('php://input'), true);
-        self::webHookUpdate($content, $telegram);
-        self::wikiAlertUpdate($content, $telegram);
+        $isWebhook = self::webHookUpdate($content, $telegram);
+        $isAlert = self::wikiAlertUpdate($content, $telegram);
+        if ( ! $isWebhook && ! $isAlert ) {
+            throw new Exception("error");
+        }
 
     }
 
     private static function webHookUpdate(array $data, Telegram $telegram) {
         if (null === $data) {
-            return;
+            return false;
         }
         if ( ! \array_key_exists('message', $data)) {
-            return;
+            return false;
         }
         $from = $data['message']['chat']['id'];
         $text = $data['message']['text'];
@@ -36,6 +41,7 @@ class Main
                 );
                 break;
         }
+        return true;
     }
 
     private static function wikiAlertUpdate(array $data, Telegram $telegram)

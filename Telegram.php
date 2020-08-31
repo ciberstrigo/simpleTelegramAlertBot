@@ -21,6 +21,10 @@ class Telegram
         $url = self::TELEGRAM_API.Variables::BOT_TOKEN.'/'.$method;
         $result = file_get_contents($url, false, $context);
 
+        if (false === $result) {
+            throw new \Exception('No result returned');
+        }
+
         return $result;
     }
 }
