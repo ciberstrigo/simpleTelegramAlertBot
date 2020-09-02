@@ -58,7 +58,7 @@ class Main
         }
         $telegram->executeCommand('sendMessage', [
             'chat_id'   => $data['chat_id'],
-            'text'      => $data['text'],
+            'text'      => \str_replace('&nbsp;', ' ', $data['text']),
             'parse_mode' => 'MarkdownV2'
         ]);
     }
