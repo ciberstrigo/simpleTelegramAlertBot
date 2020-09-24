@@ -8,45 +8,76 @@ use Exception;
 
 class Main
 {
+    /**
+     * @var Telegram
+     */
+    public static $telegram;
+
+
     public static function main()
     {
-        $telegram = new Telegram();
+        self::$telegram = new Telegram();
         $content = json_decode(file_get_contents('php://input'), true);
-        $isWebhook = self::webHookUpdate($content, $telegram);
-        $isAlert = self::wikiAlertUpdate($content, $telegram);
+
+
+        $isWebhook = self::webHookUpdate($content);
+        $isAlert = self::wikiAlertUpdate($content);
+
+
         if ( ! $isWebhook && ! $isAlert ) {
-            throw new Exception("error");
+            echo('this is telegram bot server');
+            //throw new Exception("error");
         }
 
     }
 
-    private static function webHookUpdate(array $data, Telegram $telegram) {
+    private static function webHookUpdate($data) {
         if (null === $data) {
             return false;
         }
         if ( ! \array_key_exists('message', $data)) {
             return false;
         }
-        $from = $data['message']['chat']['id'];
-        $text = $data['message']['text'];
 
-        switch ($text) {
-            default:
-                $telegram->executeCommand(
-                    'sendMessage',
-                    [
-                        'chat_id' => $from,
-                        'text' => \sprintf('Chat id is \'%s\'', $from)
-                    ]
-                );
-                break;
+        $reactions = ResponseReactionsCollection::getInstance()->getReactions();
+        $defaultReaction = ResponseReactionsCollection::getInstance()->getDefaultReaction();
+
+
+        try {
+            $reactionProcessed = false;
+            /**
+             * @var \Reaction $reaction
+             */
+            foreach ($reactions as $reaction) {
+                if ($reaction->isNeedToReact($data)) {
+                    $reaction->react($data);
+                    $reactionProcessed = true;
+                    break;
+                }
+            }
+
+            if (false === $reactionProcessed) {
+                if ($defaultReaction->isNeedToReact($data)) {
+                    $defaultReaction->react($data);
+                }
+            }
+        } catch (\Exception $exception) {
+            self::$telegram->executeCommand(
+                'sendMessage',
+                [
+                    'chat_id' => $data['message']['chat']['id'],
+                    'text' => '{EXCEPTION} ' . PHP_EOL . 'Message: ' . $exception->getMessage() . PHP_EOL . 'File: ' . $exception->getFile() . PHP_EOL . 'On line: ' . $exception->getLine()
+                ]
+            );
         }
+
         return true;
     }
 
-    private static function wikiAlertUpdate(array $data, Telegram $telegram)
+    private static function wikiAlertUpdate($data)
     {
         $data = json_decode(file_get_contents('php://input'), true);
+
         if (null === $data) {
             return null;
         }
@@ -56,7 +87,7 @@ class Main
         ) {
             return;
         }
-        $telegram->executeCommand('sendMessage', [
+        self::$telegram->executeCommand('sendMessage', [
             'chat_id'   => $data['chat_id'],
             'text'      => \str_replace('&nbsp;', ' ', $data['text']),
             'parse_mode' => 'MarkdownV2'
