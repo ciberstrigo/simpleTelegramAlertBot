@@ -1,5 +1,6 @@
 <?php
 
+namespace TelegramAlertBot\ResponseReactions\Interfaces;
 
 interface Reaction
 {

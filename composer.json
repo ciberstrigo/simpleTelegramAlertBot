@@ -10,7 +10,12 @@
         }
     ],
     "require": {
-        "vlucas/phpdotenv": "^5.1",
-        "ext-json": "*"
+        "vlucas/phpdotenv": "^5.2",
+        "ext-json": "*",
+        "longman/telegram-bot": "^0.63.1",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {"TelegramAlertBot\\": "src/"}
     }
 }

@@ -18,7 +18,7 @@ class Telegram
             ]
         ];
         $context = stream_context_create($options);
-        $url = self::TELEGRAM_API.Variables::BOT_TOKEN.'/'.$method;
+        $url = self::TELEGRAM_API . $_ENV['BOT_TOKEN'] . '/' . $method;
         $result = file_get_contents($url, false, $context);
 
         if (false === $result) {

@@ -1,5 +1,8 @@
 <?php
 
+namespace TelegramAlertBot\Entity;
+
+use TelegramAlertBot\Entity\Interfaces\Entity;
 
 class Task extends Entity
 {

@@ -1,7 +1,9 @@
 <?php
 
+namespace TelegramAlertBot\ResponseReactions;
 
 use TelegramAlertBot\Main;
+use TelegramAlertBot\ResponseReactions\Interfaces\Reaction;
 
 class DefaultReaction implements Reaction
 {

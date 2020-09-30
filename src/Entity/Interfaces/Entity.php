@@ -1,5 +1,6 @@
 <?php
 
+namespace TelegramAlertBot\Entity\Interfaces;
 
 abstract class Entity
 {

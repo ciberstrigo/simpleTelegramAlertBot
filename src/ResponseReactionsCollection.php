@@ -4,6 +4,13 @@
 namespace TelegramAlertBot;
 
 
+use TelegramAlertBot\ResponseReactions\DefaultReaction;
+use TelegramAlertBot\ResponseReactions\HashtagBugReaction;
+use TelegramAlertBot\ResponseReactions\HashtagCurrentRequestReaction;
+use TelegramAlertBot\ResponseReactions\ImageReaction;
+use TelegramAlertBot\ResponseReactions\Interfaces\Reaction;
+use TelegramAlertBot\ResponseReactions\ShowMyTasks;
+
 class ResponseReactionsCollection
 {
     private static $instances = [];
@@ -30,20 +37,22 @@ class ResponseReactionsCollection
     }
 
     /**
-     * @var \Reaction[]
+     * @var Reaction[]
      */
     private $reactionsCollection;
 
     /**
-     * @var \Reaction
+     * @var Reaction
      */
     private $defaultReaction;
 
     private function addReactions()
     {
-        $this->reactionsCollection[] = new \HashtagBugReaction();
-        $this->reactionsCollection[] = new \HashtagCurrentRequestReaction();
-        $this->defaultReaction = new \DefaultReaction();
+        $this->reactionsCollection[] = new HashtagBugReaction();
+        $this->reactionsCollection[] = new HashtagCurrentRequestReaction();
+        $this->reactionsCollection[] = new ImageReaction();
+        $this->reactionsCollection[] = new ShowMyTasks();
+        $this->defaultReaction = new DefaultReaction();
     }
 
     public function getReactions()

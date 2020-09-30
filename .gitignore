@@ -473,6 +473,6 @@ composer.lock
 *.sass.map
 *.scss.map
 
-Variables.php
+src/Variables.php
 .env
 .idea

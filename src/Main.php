@@ -5,6 +5,7 @@ namespace TelegramAlertBot;
 
 
 use Exception;
+use TelegramAlertBot\ResponseReactions\Interfaces\Reaction;
 
 class Main
 {
@@ -26,7 +27,6 @@ class Main
 
         if ( ! $isWebhook && ! $isAlert ) {
             echo('this is telegram bot server');
-            //throw new Exception("error");
         }
 
     }
@@ -43,11 +43,17 @@ class Main
         $defaultReaction = ResponseReactionsCollection::getInstance()->getDefaultReaction();
 
 
+//        self::$telegram->executeCommand(
+//            'sendMessage',
+//            [
+//                'chat_id' => $data['message']['chat']['id'],
+//                'text' => '{EXCEPTION} ' . PHP_EOL . 'Message: ' . json_encode($data)
+//            ]
+//        ); die;
+
         try {
             $reactionProcessed = false;
-            /**
-             * @var \Reaction $reaction
-             */
+
             foreach ($reactions as $reaction) {
                 if ($reaction->isNeedToReact($data)) {
                     $reaction->react($data);
@@ -69,6 +75,7 @@ class Main
                     'text' => '{EXCEPTION} ' . PHP_EOL . 'Message: ' . $exception->getMessage() . PHP_EOL . 'File: ' . $exception->getFile() . PHP_EOL . 'On line: ' . $exception->getLine()
                 ]
             );
+            throw $exception;
         }
 
         return true;

@@ -1,7 +1,10 @@
 <?php
 
+namespace TelegramAlertBot\ResponseReactions;
 
+use TelegramAlertBot\Entity\Task;
 use TelegramAlertBot\Main;
+use TelegramAlertBot\ResponseReactions\Interfaces\Reaction;
 use TelegramAlertBot\Telegram;
 
 class HashtagCurrentRequestReaction implements Reaction
@@ -10,7 +13,10 @@ class HashtagCurrentRequestReaction implements Reaction
 
     public function isNeedToReact($data): bool
     {
-        $messageText = $data['message']['text'];
+        $text = isset($data['message']['text']) ? $data['message']['text'] : '';
+        $caption = isset($data['message']['caption']) ? $data['message']['caption'] : '';
+
+        $messageText = $text . $caption;
         return (bool) \preg_match('/#cr/', $messageText);
     }
 
@@ -22,7 +28,7 @@ class HashtagCurrentRequestReaction implements Reaction
 
         if (1 === \count($titleAndText)) {
             $pieces = explode(" ", $text);
-            $title = "[CR]" . implode(" ", array_splice($pieces, 0, self::DESCRIPTION_LENGTH));
+            $title = "[CR]" . implode(" ", array_splice($pieces, 0, $_ENV['TASK_DESCRIPTION_LENGTH']));
             $description = $text;
         } else {
             $title = "[CR]" . $titleAndText[0];
@@ -49,7 +55,7 @@ class HashtagCurrentRequestReaction implements Reaction
 
         $from = $data['message']['chat']['id'];
         $messageId = $data['message']['message_id'];
-        $taskUrl = \TelegramAlertBot\TaskManager::SERVICE_URL . $result['data']['redirectUrl'];
+        $taskUrl = $_ENV['WIKI_SERVICE_URL'] . $result['data']['redirectUrl'];
 
         Main::$telegram->executeCommand(
             'sendMessage',
